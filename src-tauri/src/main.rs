@@ -1,15 +1,14 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 #![allow(dead_code, unused_imports)]
 
-
+use arboard::Clipboard;
+use chrono::{DateTime, Local};
+use serde::Serialize;
 use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::Duration;
-use tauri::State;
-use arboard::Clipboard;
-use chrono::{DateTime, Local};
 use sysinfo::System;
-use serde::Serialize;
+use tauri::State;
 
 #[derive(Serialize, Clone)]
 struct ClipboardItem {
