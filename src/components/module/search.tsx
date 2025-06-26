@@ -3,7 +3,7 @@ import { Input } from "../ui";
 const SearchModule = () => {
   return (
     <div>
-      <Input placeholder="Search..." />
+      <Input placeholder="Search..." className={"bg-card"} />
     </div>
   );
 };
