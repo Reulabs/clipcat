@@ -16,7 +16,6 @@ const ContentIcon = ({ type }: { type?: TClipItem }) => {
     file: <FiFileText aria-label="File" className={"text-chart-1"} />,
     link: <FiLink aria-label="Link" className={"text-chart-1"} />,
     text: <FiFileText aria-label="Text" className={"text-chart-1"} />,
-    // @ts-ignore
     undefined: <FiFileText aria-label="Unknown" />,
   };
 
@@ -35,7 +34,7 @@ const ContentPanel = ({ title, content, type }: IContentPanel) => {
     <div className="bg-card cursor-pointer px-4 py-5 rounded-2xl space-y-2 shadow-sm">
       <div className="flex  items-center gap-3">
         <ContentIcon type={type} />
-        <h5 className="text-white font-semibold text-base">{title}</h5>
+        <h6 className="text-white font-semibold text-sm">{title}</h6>
       </div>
       <p className="text-gray-100 text-sm break-words">
         {truncate_text(content, 50)}

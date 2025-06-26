@@ -11,6 +11,7 @@ html {
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+  --text-link: #ffa995;
   --alt-bg: oklch(0.2562 0 0);
   --surface-sunken: var(--surface-sunken);
   --big-surface: var(--big-surface);

@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
-import { FiMoreHorizontal } from "react-icons/fi";
+import { FiChevronDown, FiMoreHorizontal } from "react-icons/fi";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui";
 
 interface IContentPreviewPanel {
   children?: ReactNode;
@@ -30,6 +31,16 @@ const ContentPreviewPanel = ({ children, title }: IContentPreviewPanel) => {
         >
           {children}
         </CardContent>
+
+        <div className={"flex justify-center"}>
+          <Button
+            className={
+              "bg-[var(--big-surface)]  cursor-pointer text-[var(--text-link)] rounded-full text-xs font-medium w-40 "
+            }
+          >
+            <FiChevronDown /> See more
+          </Button>
+        </div>
       </Card>
     </section>
   );
