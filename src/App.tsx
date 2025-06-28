@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { invoke } from "@tauri-apps/api/core";
 import "./App.css";
-import SearchModule from "./components/module/search";
 import DashboardLayout from "./layouts/dashboard-layout";
-import { Sidebar } from "./components/ui";
+import ContentPanel from "@/components/module/content-panel.tsx";
 
 type ClipboardItem = {
   content: string;
@@ -24,56 +23,20 @@ function App() {
     return () => clearInterval(interval);
   }, []);
 
-  // return (
-  //   <div
-  //     style={{
-  //       minHeight: "100vh",
-  //       color: "#fff",
-  //       padding: 32,
-  //     }}
-  //   >
-  //     <h2 style={{ marginBottom: 24 }}>Clipboard History</h2>
-
-  //     <SearchModule />
-
-  //     <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-  //       {items.map((item, idx) => (
-  //         <div
-  //           key={idx}
-  //           style={{
-  //             background: "oklch(0.2308 0 0)",
-  //             borderRadius: 8,
-  //             padding: 16,
-  //             boxShadow: "0 2px 8px #0002",
-  //           }}
-  //         >
-  //           <div
-  //             style={{ fontSize: 16, marginBottom: 8, wordBreak: "break-all" }}
-  //           >
-  //             {item.content}
-  //           </div>
-  //           <div
-  //             style={{
-  //               fontSize: 12,
-  //               opacity: 0.7,
-  //               display: "flex",
-  //               justifyContent: "space-between",
-  //             }}
-  //           >
-  //             <span>{item.timestamp}</span>
-  //             <span>{item.app}</span>
-  //           </div>
-  //         </div>
-  //       ))}
-  //     </div>
-  //   </div>
-  // );
-  //
-
   return (
     <DashboardLayout>
-      {/*lorem*/}
-      {/*<SearchModule />*/}
+      <div className={"gap-2 flex flex-col"}>
+        {items.map(({ timestamp, content }: ClipboardItem, idx: number) => {
+          return (
+            <ContentPanel
+              key={idx}
+              title={"User testing interpretation"}
+              content={content}
+              type={"file"}
+            />
+          );
+        })}
+      </div>
     </DashboardLayout>
   );
 }

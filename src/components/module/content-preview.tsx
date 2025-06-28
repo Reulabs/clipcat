@@ -3,6 +3,8 @@ import {
   FiChevronDown,
   FiCopy,
   FiEdit,
+  FiFileText,
+  FiLink,
   FiMoreHorizontal,
   FiShare,
   FiTrash,
@@ -24,7 +26,7 @@ const TRIGGER = (
   </div>
 );
 
-const DROPMENU = [
+const DROPDOWNMENU = [
   {
     title: "Copy",
     icon: FiCopy,
@@ -43,16 +45,36 @@ const DROPMENU = [
   },
 ];
 
-const ContentPreviewPanel = ({ children, title }: IContentPreviewPanel) => {
+const iconMap: Record<TClipItem, JSX.Element> = {
+  file: <FiFileText aria-label="File" className={"text-chart-1"} />,
+  link: <FiLink aria-label="Link" className={"text-chart-1"} />,
+  text: <FiFileText aria-label="Text" className={"text-chart-1"} />,
+  undefined: <FiFileText aria-label="Unknown" />,
+};
+
+const ContentPreviewPanel = ({
+  children,
+  title,
+  type,
+}: IContentPreviewPanel) => {
   return (
     <section className="bg-background h-[614px]  overflow-y-auto">
       <Card className="h-full border-none py-2">
-        <CardHeader className="flex flex-row items-center justify-between">
-          <h3 className="text-white/90 font-semibold">{title ?? "Title"}</h3>
-
+        <CardHeader className="flex mt-2 flex-row items-center justify-between">
+          <div className={"flex items-center gap-2"}>
+            <div
+              className="bg-[#FFA995]/12  rounded-md
+         w-8 h-8 flex items-center justify-center text-orange-600"
+            >
+              {iconMap[type]}
+            </div>
+            <h3 className="text-white/90 font-semibold text-sm">
+              {title ?? "Untitled"}
+            </h3>
+          </div>
           <CustomDropDown trigger={TRIGGER}>
             <DropdownMenu>
-              {DROPMENU.map(({ title, icon: Icon }) => {
+              {DROPDOWNMENU.map(({ title, icon: Icon }) => {
                 const titleIsRemove = title.toLowerCase() === "remove";
                 return (
                   <div

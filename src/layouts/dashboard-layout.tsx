@@ -1,6 +1,5 @@
 import React from "react";
 import SearchModule from "@/components/module/search.tsx";
-import { AppSidebar } from "@/components/module/app-sidebar";
 import Sidenav from "@/components/module/sidenav.tsx";
 import ContentPanel from "@/components/module/content-panel.tsx";
 import ContentPreviewPanel from "@/components/module/content-preview.tsx";
@@ -23,11 +22,7 @@ const DashboardLayout = ({ children }: IDashboardLayoutProps) => {
 
         <main className="flex flex-wrap p-4 gap-4 overflow-x-hidden">
           <section className="w-full md:w-[450px] min-w-[20rem]">
-            <ContentPanel
-              title={"User testing interpretation"}
-              content={"Let's assume instead that the test was properly con..."}
-              type={"file"}
-            />
+            {children}
           </section>
 
           <div className="w-full lg:w-[600px]">
