@@ -73,14 +73,15 @@ function App() {
     return 0;
   });
 
-  
-  const groupedItems = sortedItems.reduce((groups, item) => {
-    const label = getDateLabel(item.timestamp);
-    if (!groups[label]) groups[label] = [];
-    groups[label].push(item);
-    return groups;
-  }, {} as Record<string, ClipboardItem[]>);
-
+  const groupedItems = sortedItems.reduce(
+    (groups, item) => {
+      const label = getDateLabel(item.timestamp);
+      if (!groups[label]) groups[label] = [];
+      groups[label].push(item);
+      return groups;
+    },
+    {} as Record<string, ClipboardItem[]>,
+  );
 
   const groupOrder = Object.keys(groupedItems).sort((a, b) => {
     if (a === "Today") return -1;
