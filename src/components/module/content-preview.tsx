@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, useState } from "react";
 import {
   FiChevronDown,
   FiCopy,
@@ -7,17 +7,20 @@ import {
   FiLink,
   FiMoreHorizontal,
   FiShare,
-  FiTrash,
   FiTrash2,
 } from "react-icons/fi";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui";
 import CustomDropDown from "@/components/module/drop-down-module.tsx";
 import { DropdownMenu } from "@/components/ui";
+import { toast } from "sonner";
 
+type TClipItem = "file" | "link" | "text" | undefined;
 interface IContentPreviewPanel {
-  children?: ReactNode;
+  children: ReactNode;
   title?: string;
+  type?: string;
+  clipInfo?: any;
 }
 
 const TRIGGER = (
@@ -30,18 +33,22 @@ const DROPDOWNMENU = [
   {
     title: "Copy",
     icon: FiCopy,
+    action: () => toast.success("Copied to clipboard"),
   },
   {
     title: "Share",
     icon: FiShare,
+    action: () => toast.success("Copied to clipboard"),
   },
   {
     title: "Edit",
     icon: FiEdit,
+    action: () => toast.success("Copied to clipboard"),
   },
   {
     title: "Remove",
     icon: FiTrash2,
+    action: () => toast.success("Copied to clipboard"),
   },
 ];
 
@@ -56,7 +63,12 @@ const ContentPreviewPanel = ({
   children,
   title,
   type,
+  clipInfo,
 }: IContentPreviewPanel) => {
+  const [showMoreInfo, setShowMoreInfo] = useState(false);
+
+  const toggleShowMore = () => setShowMoreInfo((prev) => !prev);
+
   return (
     <section className="bg-background h-[614px]  overflow-y-auto">
       <Card className="h-full border-none py-2">
@@ -74,12 +86,13 @@ const ContentPreviewPanel = ({
           </div>
           <CustomDropDown trigger={TRIGGER}>
             <DropdownMenu>
-              {DROPDOWNMENU.map(({ title, icon: Icon }) => {
+              {DROPDOWNMENU.map(({ title, icon: Icon, action }) => {
                 const titleIsRemove = title.toLowerCase() === "remove";
                 return (
                   <div
                     className="flex cursor-pointer items-center gap-2 px-4 py-2 hover:bg-muted/5"
                     key={title}
+                    onClick={action}
                   >
                     <Icon size={14} color={titleIsRemove ? "red" : "white"} />
                     <span
@@ -95,26 +108,34 @@ const ContentPreviewPanel = ({
         </CardHeader>
 
         <CardContent
-          className=" h-[calc(340px-20px)] bg-[var(--big-surface)] mx-6
-                    py-6 rounded-lg"
+          className={`transition-all duration-500 bg-[var(--big-surface)] mx-6 rounded-lg overflow-y-auto text-sm
+    ${showMoreInfo ? "h-[calc(340px-20px)] py-6" : "h-[calc(480px-20px)] py-6"}
+  `}
         >
           {children}
         </CardContent>
 
-        <CardContent
-          className=" h-[140px] bg-[var(--big-surface)] mx-6
-                    py-6 rounded-lg"
+        <div
+          className={`transition-all duration-500 ease-in-out overflow-hidden mx-6 rounded-lg bg-[var(--big-surface)] ${
+            showMoreInfo ? "max-h-[140px] py-6" : "max-h-0 py-0"
+          }`}
         >
-          {children}
-        </CardContent>
+          <CardContent className="text-sm text-white/80">
+            {clipInfo}
+          </CardContent>
+        </div>
 
         <div className={"flex justify-center"}>
           <Button
-            className={
-              "bg-[var(--big-surface)]  cursor-pointer text-[var(--text-link)] rounded-full text-xs font-medium w-40 "
-            }
+            className="bg-[var(--big-surface)] cursor-pointer text-[var(--text-link)] rounded-full text-xs font-medium w-40 flex items-center gap-1"
+            onClick={toggleShowMore}
           >
-            <FiChevronDown /> See more
+            <FiChevronDown
+              className={`transition-transform duration-300 ${
+                showMoreInfo ? "rotate-180" : ""
+              }`}
+            />
+            {showMoreInfo ? "See less" : "See more"}
           </Button>
         </div>
       </Card>

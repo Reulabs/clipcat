@@ -1,8 +1,8 @@
 import { FiFileText, FiLink } from "react-icons/fi";
+import useContentStore from "@/store/content-store.ts";
 import { truncate_text } from "@/utils/text-util.ts";
 
 type TClipItem = "file" | "link" | "text" | undefined;
-
 interface IContentPanel {
   title: string;
   content: string;
@@ -30,14 +30,22 @@ const ContentIcon = ({ type }: { type?: TClipItem }) => {
 };
 
 const ContentPanel = ({ title, content, type }: IContentPanel) => {
+  const { updateContent } = useContentStore();
+  function updateContentAction(item: string) {
+    updateContent(item);
+  }
+
   return (
-    <div className="bg-card cursor-pointer px-5 py-6 rounded-2xl space-y-2 shadow-sm">
+    <div
+      className="bg-card cursor-pointer px-5 py-6 rounded-2xl space-y-2 shadow-sm"
+      onClick={() => updateContentAction(content)}
+    >
       <div className="flex  items-center gap-3">
         <ContentIcon type={type} />
         <h6 className="text-white font-semibold text-sm">{title}</h6>
       </div>
       <p className="text-gray-100 text-sm break-words">
-        {truncate_text(content, 45)}
+        {truncate_text(content, 90)}
       </p>
     </div>
   );

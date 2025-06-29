@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button, Input } from "../ui";
 import {
   FiFilter,
@@ -8,6 +7,7 @@ import {
   FiArrowUp,
 } from "react-icons/fi";
 import CustomDropDown from "@/components/module/drop-down-module.tsx";
+import { useSearch } from "@/hooks/use-search.tsx";
 
 const FILTERBUTTON = (
   <Button className="bg-transparent border border-white/10 text-white/80 flex items-center gap-2 px-3 py-2 rounded-md hover:bg-white/5 transition">
@@ -41,23 +41,21 @@ const SearchedItem = ({
 );
 
 const SearchModule = () => {
-  const [searchInput, setSearchInput] = useState("");
-  const [keywords, setKeywords] = useState<string[]>([]);
+  const {
+    search: searchInput,
+    keywords,
+    setSearch: setSearchInput,
+    addKeyword,
+    removeKeyword,
+    clearKeywords,
+  } = useSearch();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && searchInput.trim()) {
-      if (!keywords.includes(searchInput.trim())) {
-        setKeywords((prev) => [...prev, searchInput.trim()]);
-      }
+      addKeyword(searchInput.trim());
       setSearchInput("");
     }
   };
-
-  const removeKeyword = (keyword: string) => {
-    setKeywords((prev) => prev.filter((k) => k !== keyword));
-  };
-
-  const clearKeywords = () => setKeywords([]);
 
   return (
     <div className="w-full">
@@ -79,7 +77,7 @@ const SearchModule = () => {
               <div
                 key={value}
                 className="flex items-center gap-2 px-4 py-2 hover:bg-muted/10 cursor-pointer transition"
-                onClick={() => setKeywords((prev) => [...prev, label])}
+                onClick={() => addKeyword(label)}
               >
                 <Icon size={16} />
                 <span>{label}</span>

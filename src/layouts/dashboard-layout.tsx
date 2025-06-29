@@ -1,8 +1,7 @@
 import React from "react";
 import SearchModule from "@/components/module/search.tsx";
 import Sidenav from "@/components/module/sidenav.tsx";
-import ContentPanel from "@/components/module/content-panel.tsx";
-import ContentPreviewPanel from "@/components/module/content-preview.tsx";
+import ContentPreview from "@/components/views/content-preview.tsx";
 
 interface IDashboardLayoutProps {
   children?: React.ReactNode;
@@ -21,12 +20,12 @@ const DashboardLayout = ({ children }: IDashboardLayoutProps) => {
         </header>
 
         <main className="flex flex-wrap p-4 gap-4 overflow-x-hidden">
-          <section className="w-full md:w-[450px] min-w-[20rem]">
+          <section className="w-full md:w-[450px] min-w-[20rem] h-full overflow-y-auto">
             {children}
           </section>
 
           <div className="w-full lg:w-[600px]">
-            <ContentPreviewPanel />
+            <ContentPreview />
           </div>
         </main>
       </div>
