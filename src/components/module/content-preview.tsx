@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import {
   FiChevronDown,
   FiCopy,
@@ -144,7 +144,17 @@ const ContentPreviewPanel = ({
           }`}
         >
           <CardContent className="text-sm text-white/80">
-            {clipInfo}
+            {clipInfo && (
+              <div className="flex flex-col gap-2">
+                <p>
+                  <span className="font-semibold">Source App:</span> {clipInfo.app}
+                </p>
+                <p>
+                  <span className="font-semibold">Timestamp:</span>{" "}
+                  {clipInfo.timestamp}
+                </p>
+              </div>
+            )}
           </CardContent>
         </div>
 
