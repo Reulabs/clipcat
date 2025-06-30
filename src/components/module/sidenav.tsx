@@ -19,11 +19,11 @@ const SidebarNav = () => {
       icon: <FiBookmark className="text-white text-xl" />,
       path: "/dashboard/bookmarks",
     },
-    {
-      title: "Settings",
-      icon: <FiSettings className="text-white text-xl" />,
-      path: "/dashboard/settings",
-    },
+    // {
+    //   title: "Settings",
+    //   icon: <FiSettings className="text-white text-xl" />,
+    //   path: "/dashboard/settings",
+    // },
   ];
 
   return (
@@ -39,7 +39,7 @@ const SidebarNav = () => {
         </div>
 
         <div className={"flex flex-col gap-3 items-center justify-center"}>
-          {NAV_ITEM.map(({ title, icon, path }, index) => {
+          {NAV_ITEM.map(({ icon, path }, index) => {
             const is_active = checkPathMatch(path);
             const item_is_first = index === 0;
             return (

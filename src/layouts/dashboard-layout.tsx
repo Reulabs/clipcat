@@ -20,11 +20,14 @@ const DashboardLayout = ({ children }: IDashboardLayoutProps) => {
         </header>
 
         <main className="flex flex-wrap p-4 gap-4 overflow-x-hidden">
-          <section className="w-full md:w-[450px] min-w-[20rem] h-full overflow-y-auto">
+          <section
+            className="w-full lg:w-[450px] md:w-[300px]
+            h-full overflow-y-auto"
+          >
             {children}
           </section>
 
-          <div className="w-full lg:w-[600px]">
+          <div className="w-full hidden lg:block md:w-[480px] lg:w-[600px]">
             <ContentPreview />
           </div>
         </main>

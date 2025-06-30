@@ -1,8 +1,33 @@
+import { useState, useEffect } from "react";
 import { FiFileText, FiLink } from "react-icons/fi";
 import useContentStore from "@/store/content-store.ts";
 import { truncate_text } from "@/utils/text-util.ts";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import ContentPreview from "@/components/views/content-preview.tsx";
+
+// Hook to detect screen size
+function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia(query);
+    const listener = () => setMatches(media.matches);
+    listener();
+    media.addEventListener("change", listener);
+    return () => media.removeEventListener("change", listener);
+  }, [query]);
+
+  return matches;
+}
 
 type TClipItem = "file" | "link" | "text" | undefined;
+
 interface IContentPanel {
   title: string;
   content: string;
@@ -10,20 +35,15 @@ interface IContentPanel {
 }
 
 const ContentIcon = ({ type }: { type?: TClipItem }) => {
-  // @ts-ignore
-
   const iconMap: Record<TClipItem, JSX.Element> = {
-    file: <FiFileText aria-label="File" className={"text-chart-1"} />,
-    link: <FiLink aria-label="Link" className={"text-chart-1"} />,
-    text: <FiFileText aria-label="Text" className={"text-chart-1"} />,
+    file: <FiFileText aria-label="File" className="text-chart-1" />,
+    link: <FiLink aria-label="Link" className="text-chart-1" />,
+    text: <FiFileText aria-label="Text" className="text-chart-1" />,
     undefined: <FiFileText aria-label="Unknown" />,
   };
 
   return (
-    <div
-      className="bg-[#FFA995]/12  rounded-md
-         w-8 h-8 flex items-center justify-center text-white"
-    >
+    <div className="bg-[#FFA995]/12 rounded-md w-8 h-8 flex items-center justify-center text-white">
       {iconMap[type]}
     </div>
   );
@@ -31,16 +51,18 @@ const ContentIcon = ({ type }: { type?: TClipItem }) => {
 
 const ContentPanel = ({ title, content, type }: IContentPanel) => {
   const { updateContent } = useContentStore();
-  function updateContentAction(item: string) {
-    updateContent(item);
-  }
+  const isSmallScreen = useMediaQuery("(max-width: 768px)");
 
-  return (
+  const handleClick = () => {
+    updateContent(content);
+  };
+
+  const PanelContent = (
     <div
       className="bg-card cursor-pointer px-5 py-6 rounded-2xl space-y-2 shadow-sm"
-      onClick={() => updateContentAction(content)}
+      onClick={handleClick}
     >
-      <div className="flex  items-center gap-3">
+      <div className="flex items-center gap-3">
         <ContentIcon type={type} />
         <h6 className="text-white font-semibold text-sm">{title}</h6>
       </div>
@@ -49,6 +71,22 @@ const ContentPanel = ({ title, content, type }: IContentPanel) => {
       </p>
     </div>
   );
+
+  if (isSmallScreen) {
+    return (
+      <Sheet>
+        <SheetTrigger asChild>{PanelContent}</SheetTrigger>
+        <SheetContent
+          side="right"
+          className="bg-card border-0 [&>button]:hidden"
+        >
+          <ContentPreview />
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  return PanelContent;
 };
 
 export default ContentPanel;
