@@ -6,12 +6,7 @@ import ContentPanel from "@/components/module/content-panel.tsx";
 import { get_content_title } from "@/utils/text-util.ts";
 import { useSearch } from "@/hooks/use-search.tsx";
 import { getDateLabel } from "@/utils/misc";
-
-type ClipboardItem = {
-  content: string;
-  timestamp: string;
-  app: string;
-};
+import { ClipboardItem } from "@/types";
 
 function App() {
   const [items, setItems] = useState<ClipboardItem[]>([]);
@@ -101,6 +96,7 @@ function App() {
             {groupedItems[label].map((item, idx) => (
               <ContentPanel
                 key={item.timestamp + idx}
+                item={item}
                 title={get_content_title(item.content)}
                 content={item.content}
                 type={"file"}

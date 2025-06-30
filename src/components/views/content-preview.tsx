@@ -12,7 +12,7 @@ function isCode(content: string) {
 }
 
 const ContentPreview = () => {
-  const { content } = useContentStore();
+  const { content, selectedItem } = useContentStore();
   const [highlighted, setHighlighted] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,7 +41,11 @@ const ContentPreview = () => {
   }, [content]);
 
   return (
-    <ContentPreviewPanel title={get_content_title(content, 7)} type="text">
+    <ContentPreviewPanel
+      title={get_content_title(content, 7)}
+      type="text"
+      clipInfo={selectedItem}
+    >
       {highlighted ? (
         <div
           className="shiki text-white/90"

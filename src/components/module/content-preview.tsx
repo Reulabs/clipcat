@@ -14,12 +14,14 @@ import { Button } from "@/components/ui";
 import CustomDropDown from "@/components/module/drop-down-module.tsx";
 import { DropdownMenu } from "@/components/ui";
 import { toast } from "sonner";
+import { invoke } from "@tauri-apps/api/core";
+import useContentStore from "@/store/content-store";
 
-type TClipItem = "file" | "link" | "text" | undefined;
+type TClipItem = "file" | "link" | "text";
 interface IContentPreviewPanel {
   children: ReactNode;
   title?: string;
-  type?: string;
+  type?: TClipItem;
   clipInfo?: any;
 }
 
@@ -29,45 +31,66 @@ const TRIGGER = (
   </div>
 );
 
-const DROPDOWNMENU = [
-  {
-    title: "Copy",
-    icon: FiCopy,
-    action: () => toast.success("Copied to clipboard"),
-  },
-  {
-    title: "Share",
-    icon: FiShare,
-    action: () => toast.success("Copied to clipboard"),
-  },
-  {
-    title: "Edit",
-    icon: FiEdit,
-    action: () => toast.success("Copied to clipboard"),
-  },
-  {
-    title: "Remove",
-    icon: FiTrash2,
-    action: () => toast.success("Copied to clipboard"),
-  },
-];
-
 const iconMap: Record<TClipItem, JSX.Element> = {
   file: <FiFileText aria-label="File" className={"text-chart-1"} />,
   link: <FiLink aria-label="Link" className={"text-chart-1"} />,
   text: <FiFileText aria-label="Text" className={"text-chart-1"} />,
-  undefined: <FiFileText aria-label="Unknown" />,
 };
 
 const ContentPreviewPanel = ({
   children,
   title,
-  type,
+  type = "text",
   clipInfo,
 }: IContentPreviewPanel) => {
   const [showMoreInfo, setShowMoreInfo] = useState(false);
+  const { updateContent } = useContentStore();
 
   const toggleShowMore = () => setShowMoreInfo((prev) => !prev);
+
+  const handleCopy = () => {
+    if (!clipInfo?.content) return;
+    navigator.clipboard.writeText(clipInfo.content);
+    toast.success("Copied to clipboard");
+  };
+
+  const handleShare = async () => {
+    if (!clipInfo?.content) return;
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title,
+          text: clipInfo.content,
+        });
+      } catch (error) {
+        toast.error("Error sharing content");
+      }
+    } else {
+      handleCopy();
+    }
+  };
+
+  const handleRemove = async () => {
+    if (!clipInfo?.timestamp) return;
+    try {
+      await invoke("remove_item", { timestamp: clipInfo.timestamp });
+      updateContent("");
+      toast.success("Item removed");
+    } catch (error) {
+      toast.error("Error removing item");
+    }
+  };
+
+  const handleEdit = () => {
+    toast.info("Edit functionality is not yet available.");
+  };
+
+  const dropdownMenu = [
+    { title: "Copy", icon: FiCopy, action: handleCopy },
+    { title: "Share", icon: FiShare, action: handleShare },
+    { title: "Edit", icon: FiEdit, action: handleEdit },
+    { title: "Remove", icon: FiTrash2, action: handleRemove },
+  ];
 
   return (
     <section className="bg-background h-[614px]  overflow-y-auto">
@@ -86,7 +109,7 @@ const ContentPreviewPanel = ({
           </div>
           <CustomDropDown trigger={TRIGGER}>
             <DropdownMenu>
-              {DROPDOWNMENU.map(({ title, icon: Icon, action }) => {
+              {dropdownMenu.map(({ title, icon: Icon, action }) => {
                 const titleIsRemove = title.toLowerCase() === "remove";
                 return (
                   <div

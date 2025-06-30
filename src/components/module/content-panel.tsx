@@ -5,13 +5,11 @@ import { truncate_text } from "@/utils/text-util.ts";
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import ContentPreview from "@/components/views/content-preview.tsx";
+import { ClipboardItem } from "@/types";
 
-// Hook to detect screen size
 function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
 
@@ -29,6 +27,7 @@ function useMediaQuery(query: string): boolean {
 type TClipItem = "file" | "link" | "text" | undefined;
 
 interface IContentPanel {
+  item: ClipboardItem;
   title: string;
   content: string;
   type?: TClipItem;
@@ -49,12 +48,13 @@ const ContentIcon = ({ type }: { type?: TClipItem }) => {
   );
 };
 
-const ContentPanel = ({ title, content, type }: IContentPanel) => {
-  const { updateContent } = useContentStore();
+const ContentPanel = ({ item, title, content, type }: IContentPanel) => {
+  const { updateContent, setSelectedItem } = useContentStore();
   const isSmallScreen = useMediaQuery("(max-width: 768px)");
 
   const handleClick = () => {
     updateContent(content);
+    setSelectedItem(item);
   };
 
   const PanelContent = (

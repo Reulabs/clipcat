@@ -24,6 +24,12 @@ fn get_clipboard_history(history: State<SharedHistory>) -> Vec<ClipboardItem> {
     history.lock().unwrap().clone()
 }
 
+#[tauri::command]
+fn remove_item(timestamp: String, history: State<SharedHistory>) {
+    let mut hist = history.lock().unwrap();
+    hist.retain(|item| item.timestamp != timestamp);
+}
+
 fn get_frontmost_app() -> String {
     let mut sys = System::new_all();
     sys.refresh_all();
@@ -65,7 +71,10 @@ fn main() {
     });
     tauri::Builder::default()
         .manage(history)
-        .invoke_handler(tauri::generate_handler![get_clipboard_history])
+        .invoke_handler(tauri::generate_handler![
+            get_clipboard_history,
+            remove_item
+        ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
